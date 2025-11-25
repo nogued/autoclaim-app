@@ -396,15 +396,22 @@ export default function ClaimApprovalAuthorization() {
                       </div>
                     </div>
 
-                    {/* Approved Amount */}
-                    {review.result.approved_amount !== undefined && (
-                      <div className="review-approved-amount">
-                        <div className="review-approved-label">Approved Amount</div>
-                        <div className="review-approved-value">
-                          USD ${review.result.approved_amount?.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) || '0'}
+                    {/* Approved Amount - Always use original estimate from localStorage */}
+                    {costEstimate?.result && (() => {
+                      // Calculate approved amount from original estimate: total_parts_cost + total_labor_cost
+                      const originalPartsCost = costEstimate.result.total_parts_cost || 0
+                      const originalLaborCost = costEstimate.result.total_labor_cost || 0
+                      const approvedAmount = originalPartsCost + originalLaborCost
+                      
+                      return (
+                        <div className="review-approved-amount">
+                          <div className="review-approved-label">Approved Amount</div>
+                          <div className="review-approved-value">
+                            USD ${approvedAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )
+                    })()}
 
                     {/* Review Details */}
                     <div className="review-details">
